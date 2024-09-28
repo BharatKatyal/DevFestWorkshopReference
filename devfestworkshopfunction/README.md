@@ -21,7 +21,8 @@ def hello_world(request):
 EOF
 
 # Create an empty requirements.txt
-touch requirements.txt
+echo -e "Flask==2.0.1\nWerkzeug==2.0.1" > requirements.txt
+
 
 # Set your project ID
 PROJECT_ID=$(gcloud config get-value project)
