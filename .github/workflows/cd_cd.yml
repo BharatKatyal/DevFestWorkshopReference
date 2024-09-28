@@ -10,7 +10,7 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   SERVICE_NAME: devfestworkshopfunction
   REGION: us-central1
-  REPOSITORY: devfest-function
+  REPOSITORY: devfest-workshop-repo
 
 jobs:
   test:
