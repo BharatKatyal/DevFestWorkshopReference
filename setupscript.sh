@@ -26,12 +26,21 @@ setup() {
     SERVICE_ACCOUNT_NAME="github-actions-sa"
     SERVICE_ACCOUNT_EMAIL="${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
     KEY_FILE="service-account-key.json"
+    REGION="us-central1"
+    REPOSITORY_NAME="devfest-workshop-repo"
 
     echo "Setting up Google Cloud resources for project: ${PROJECT_ID}"
 
     # Enable necessary APIs
     echo "Enabling necessary APIs..."
-    gcloud services enable run.googleapis.com cloudbuild.googleapis.com iam.googleapis.com
+    gcloud services enable run.googleapis.com cloudbuild.googleapis.com iam.googleapis.com artifactregistry.googleapis.com
+
+    # Create Artifact Registry repository
+    echo "Creating Artifact Registry repository..."
+    gcloud artifacts repositories create $REPOSITORY_NAME \
+        --repository-format=docker \
+        --location=$REGION \
+        --description="Docker repository for DevFest Workshop"
 
     # Create service account
     echo "Creating service account..."
@@ -48,6 +57,9 @@ setup() {
     gcloud projects add-iam-policy-binding $PROJECT_ID \
         --member="serviceAccount:${SERVICE_ACCOUNT_EMAIL}" \
         --role="roles/iam.serviceAccountUser"
+    gcloud projects add-iam-policy-binding $PROJECT_ID \
+        --member="serviceAccount:${SERVICE_ACCOUNT_EMAIL}" \
+        --role="roles/artifactregistry.admin"
 
     # Create and download a JSON key for the service account
     echo "Creating and downloading service account key..."
@@ -60,6 +72,9 @@ setup() {
 
     echo "Please add these as secrets in your GitHub repository."
     echo "After adding the secrets, you can delete the $KEY_FILE file from your local machine."
+    
+    echo "Artifact Registry repository '${REPOSITORY_NAME}' has been created in region '${REGION}'."
+    echo "Update your GitHub Actions workflow to use: ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/devfestworkshopfunction"
 }
 
 # Run the script
