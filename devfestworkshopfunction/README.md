@@ -121,7 +121,7 @@ index.html
 ```
 
 ```
-BUCKET_NAME="mydevfest2024bucket"
+BUCKET_NAME="mydevfest2024bucket1"
 # Set the project
 gcloud config set project $PROJECT_ID
 
